@@ -2,6 +2,19 @@ import customtkinter as ctk
 from tkinter import * 
 import tkinter
 
+def login():
+    status = OnlineDrop.get()
+    if status in ["Online", "Offline", "Busy"]:
+        new_window = tkinter.Toplevel(app)
+        new_window.geometry("200x200")
+        new_window.title("Welcome")
+        welcome_label = ctk.Label(new_window, text=f"Welcome, {UsernameTextbox.get()}!\nStatus: {status}")
+        welcome_label.pack(padx=10, pady=10)
+        app.destroy()
+        
+
+
+
 app = tkinter.Tk() #main window for gui 
 app.geometry = ("400x400") 
 app.title("Video Game Profile")
@@ -19,8 +32,9 @@ UsernameTextbox.pack(pady = 12, padx = 10)
 OnlineDrop = ctk.CTkComboBox(master=frame, values = ["Online", "Offline", "Busy"])
 OnlineDrop.pack(pady = 12, padx = 10)
 
+
 #Login Button
-LoginButton = ctk.CTkButton(master=frame, text="Login")
+LoginButton = ctk.CTkButton(master=frame, text="Login", command= login)
 LoginButton.pack(pady=12, padx=10)
 
 
