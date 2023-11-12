@@ -1,4 +1,3 @@
-
 #Creates the class "Friend"
 class Friend:
     #Initializes members of friend object
@@ -8,10 +7,8 @@ class Friend:
         self.last_online = last_online
     
     #Prints members of friend object
-    def friend_info(self):
-        print(f"Username: {self.user_name}")
-        print(f"Name: {self.real_name}")
-        print(f"Last Online (hours): {self.last_online}")
+    def __str__(self):
+        return (f"Username: {self.user_name}\n Real Name: {self.real_name}\n Hours since Last Online: {self.last_online}")
 
 #method that fills the global friend list array with the data from friends.txt
 def initialize_friend_list(file_path):
@@ -28,7 +25,3 @@ def initialize_friend_list(file_path):
                 friend_list.append(friend)
 
     return friend_list
-
-#Debug print statement
-#for friend in friend_list:
-#    friend.friend_info()
