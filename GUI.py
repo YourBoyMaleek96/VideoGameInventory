@@ -1,25 +1,46 @@
 import customtkinter as ctk
 from tkinter import * 
+from main import calculate_achievement_score
+
+#Constant for color theme
+BLUE = "#1f6aa5"
+
+def create_banner_frame(parent, username, status,total_achievements):
+    """Create the banner frame with the given username and status."""
+    BannerFrame = ctk.CTkFrame(parent, border_width=2, fg_color=BLUE)
+    BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
+    create_username_banner(BannerFrame, username, status, total_achievements)
+
+def create_main_page(username, status,total_achievements):
+    """Create the main screen after the user has logged in"""
+    MainPage = ctk.CTkToplevel(app)
+    width = app.winfo_screenwidth()
+    height = app.winfo_screenheight()
+    MainPage.geometry(f"{width}x{height}")
+    MainPage.title(" Video Game Profile")
+    create_banner_frame(MainPage, username, status,total_achievements)
+    app.withdraw()
+
+def create_username_banner(parent, username, status, total_achievements):
+    """Create the username banner with the given username, status, and total_achievements."""
+    UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {total_achievements} | Status: {status}")
+    UsernameBanner.pack(fill="x")
+
 
 def login():
     """This function explains what happens after you press Login.
-       It takes in a username and online staus and display it to screen.
+       It takes in a username and online status and displays it to the screen.
     """
+    print("Welcome")
     status = OnlineDrop.get()
+
     if status in ["Online", "Offline", "Busy"]:
-        MainPage = ctk.CTkToplevel(app)
-        width = app.winfo_screenwidth()
-        height = app.winfo_screenheight()
-        MainPage.geometry(f"{width}x{height}")
-        MainPage.title(" Video Game Profile")
-        BannerFrame = ctk.CTkFrame(MainPage, border_width=2, fg_color= "Blue")
-        BannerFrame.pack(side="top", fill="x", padx=10,pady=10)
-        UsernameBanner = ctk.CTkLabel(BannerFrame, text=f"{UsernameTextbox.get()} | Achievement Score: | Status: {status}")
-        UsernameBanner.pack(fill = "x")
-        app.withdraw()
+        username = UsernameTextbox.get()
+        total_achievements = calculate_achievement_score()
+        create_main_page(username, status, total_achievements)
 
 
-
+" Creates the login window that displays login button and online status dropdown"
 app = ctk.CTk() #main window for gui 
 width = app.winfo_screenwidth()
 height = app.winfo_screenheight()
