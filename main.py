@@ -19,8 +19,8 @@ def calculate_achievement_score():
 
     for game in user_game_list:
         total_achievements += game.num_achievements
-
+   
     print(f"Total Achievements: {total_achievements}")
-
+    return total_achievements
 calculate_achievement_score()
 
