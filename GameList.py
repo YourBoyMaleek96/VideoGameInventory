@@ -8,7 +8,7 @@ class Game:
 
     #Prints members of game object
     def __str__(self):
-        return (f"Game Title: {self.game_title}\n Hours Played: {self.hours_played}\n Number of Achievements: {self.num_achievements}")
+        return (f"Game Title: {self.game_title}\n Hours Played: {self.hours_played}\n Number of Achievements: {self.num_achievements}\n")
 
 #method that fills the global games list array with the data from games.txt
 def initialize_game_list(file_path):

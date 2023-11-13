@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import * 
 from main import calculate_achievement_score
+from FriendList import initialize_friend_list
+from GameList import initialize_game_list
 
 #Constant for color theme
 BLUE = "#1f6aa5"
@@ -11,7 +13,7 @@ def create_banner_frame(parent, username, status,total_achievements):
     BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
     create_username_banner(BannerFrame, username, status, total_achievements)
 
-def create_main_page(username, status,total_achievements):
+def create_main_page(username, status,total_achievements, friend_list, game_list):
     """Create the main screen after the user has logged in"""
     MainPage = ctk.CTkToplevel(app)
     width = app.winfo_screenwidth()
@@ -19,6 +21,10 @@ def create_main_page(username, status,total_achievements):
     MainPage.geometry(f"{width}x{height}")
     MainPage.title(" Video Game Profile")
     create_banner_frame(MainPage, username, status,total_achievements)
+    
+    display_friend_list(MainPage, friend_list, font_size=12)
+    display_game_list(MainPage,game_list, font_size=12)
+    
     app.withdraw()
 
 def create_username_banner(parent, username, status, total_achievements):
@@ -26,6 +32,21 @@ def create_username_banner(parent, username, status, total_achievements):
     UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {total_achievements} | Status: {status}")
     UsernameBanner.pack(fill="x")
 
+def display_friend_list(parent, friend_list, font_size=12):
+    friend_frame = ctk.CTkFrame(parent)
+    friend_frame.pack(side="left", padx=10, pady=10)
+
+    for friend in friend_list:
+        friend_label = ctk.CTkLabel(friend_frame, text=str(friend), height=10, width=30)
+        friend_label.pack()
+
+def display_game_list(parent, game_list, font_size=12):
+    game_frame = ctk.CTkFrame(parent)
+    game_frame.pack(side="right", padx=10, pady=10)
+
+    for game in game_list:
+        game_label = ctk.CTkLabel(game_frame, text=str(game), height=10, width=30)
+        game_label.pack()
 
 def login():
     """This function explains what happens after you press Login.
@@ -37,7 +58,11 @@ def login():
     if status in ["Online", "Offline", "Busy"]:
         username = UsernameTextbox.get()
         total_achievements = calculate_achievement_score()
-        create_main_page(username, status, total_achievements)
+
+        friend_list = initialize_friend_list("FriendList/friends.txt")
+        game_list = initialize_game_list("GameList/games.txt")
+
+        create_main_page(username, status, total_achievements, friend_list, game_list)
 
 
 " Creates the login window that displays login button and online status dropdown"
