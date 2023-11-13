@@ -33,6 +33,8 @@ def create_username_banner(parent, username, status, total_achievements):
     UsernameBanner.pack(fill="x")
 
 def display_friend_list(parent, friend_list, font_size=12):
+    """This function will print out the Friend List on the Main GUI
+    """
     friend_frame = ctk.CTkFrame(parent)
     friend_frame.pack(side="left", padx=10, pady=10)
 
@@ -41,6 +43,8 @@ def display_friend_list(parent, friend_list, font_size=12):
         friend_label.pack()
 
 def display_game_list(parent, game_list, font_size=12):
+    """This function will print out the Game List on the Main GUI 
+    """
     game_frame = ctk.CTkFrame(parent)
     game_frame.pack(side="right", padx=10, pady=10)
 
@@ -52,7 +56,6 @@ def login():
     """This function explains what happens after you press Login.
        It takes in a username and online status and displays it to the screen.
     """
-    print("Welcome")
     status = OnlineDrop.get()
 
     if status in ["Online", "Offline", "Busy"]:
