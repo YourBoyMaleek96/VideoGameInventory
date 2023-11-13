@@ -36,8 +36,19 @@ def initialize_friend_list(file_path):
 
 # Add Friend Function
 def add_friend(friend_list, user_name, real_name, last_online):
-    new_friend = Friend(user_name, real_name, last_online)
-    friend_list.append(new_friend)
+    try:
+        last_online = int(last_online)
+
+        if not user_name or not real_name:
+            raise ValueError("Username and real name cannot be empty.")
+
+        new_friend = Friend(user_name, real_name, last_online)
+        friend_list.append(new_friend)
+        
+    except ValueError as e:
+        print(f"Error adding friend: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 # Remove Friend Function
 def remove_friend(friend_list, user_name):
