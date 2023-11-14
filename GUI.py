@@ -22,35 +22,48 @@ def create_main_page(username, status,total_achievements, friend_list, game_list
     MainPage.title(" Video Game Profile")
     create_banner_frame(MainPage, username, status,total_achievements)
     
-    display_friend_list(MainPage, friend_list, font_size=12)
-    display_game_list(MainPage,game_list, font_size=12)
+    # Create the friend menu and banner
+    friend_menu_frame = ctk.CTkFrame(MainPage, border_width=3, border_color=BLUE)
+    friend_banner = ctk.CTkLabel(friend_menu_frame, text="Friends")
+    friend_banner.pack()  # Place the friend_banner inside the frame
+    friend_menu_frame.place(relx=0.3, rely=0.5, anchor="center")
+
+    # Create the game menu and banner
+    game_menu_frame = ctk.CTkFrame(MainPage, border_width=3, border_color=BLUE)
+    game_banner = ctk.CTkLabel(game_menu_frame, text="Games")
+    game_banner.pack()  # Place the game_banner inside the frame
+    game_menu_frame.place(relx=0.7, rely=0.5, anchor="center")
+
+    # Create and place your textboxes (friend_menu and game_menu) here
+    friend_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
+    friend_menu.place(relx=0.3, rely=0.6, anchor="center", relwidth=0.2, relheight=0.4) 
+
+    game_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
+    game_menu.place(relx=0.7, rely=0.6, anchor="center", relwidth=0.2, relheight=0.4)  
+
     
     app.withdraw()
-
+  
 def create_username_banner(parent, username, status, total_achievements):
     """Create the username banner with the given username, status, and total_achievements."""
     UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {total_achievements} | Status: {status}")
     UsernameBanner.pack(fill="x")
 
-def display_friend_list(parent, friend_list, font_size=12):
+# def display_friend_list(parent, friend_list, font_size=12):
     """This function will print out the Friend List on the Main GUI
     """
-    friend_frame = ctk.CTkFrame(parent)
-    friend_frame.pack(side="left", padx=10, pady=10)
+   # for friend in friend_list:
+    #    parent.insert(ctk.END, str(friend) + "\n")
 
-    for friend in friend_list:
-        friend_label = ctk.CTkLabel(friend_frame, text=str(friend), height=10, width=30)
-        friend_label.pack()
-
-def display_game_list(parent, game_list, font_size=12):
+#def display_game_list(parent, game_list, font_size=12):
     """This function will print out the Game List on the Main GUI 
     """
-    game_frame = ctk.CTkFrame(parent)
+    """ game_frame = ctk.CTkFrame(parent)
     game_frame.pack(side="right", padx=10, pady=10)
 
     for game in game_list:
         game_label = ctk.CTkLabel(game_frame, text=str(game), height=10, width=30)
-        game_label.pack()
+        game_label.pack() """
 
 def login():
     """This function explains what happens after you press Login.
