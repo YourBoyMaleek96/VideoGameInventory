@@ -8,7 +8,7 @@ class Friend:
     
     #Prints members of friend object
     def __str__(self):
-        return (f"Username: {self.user_name}\n Real Name: {self.real_name}\n Hours since Last Online: {self.last_online}\n")
+        return (f"Username: {self.user_name}\nReal Name: {self.real_name}\nHours since Last Online: {self.last_online}\n")
 
 #method that fills the global friend list array with the data from friends.txt
 def initialize_friend_list(file_path):
