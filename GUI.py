@@ -37,10 +37,13 @@ def create_main_page(username, status,total_achievements, friend_list, game_list
     # Create and place your textboxes (friend_menu and game_menu) here
     friend_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
     friend_menu.place(relx=0.3, rely=0.6, anchor="center", relwidth=0.2, relheight=0.4) 
+    friends = initialize_friend_list("FriendList/friends.txt")
+    display_friend_list(friend_menu, friends)
 
     game_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
     game_menu.place(relx=0.7, rely=0.6, anchor="center", relwidth=0.2, relheight=0.4)  
-
+    games = initialize_game_list("GameList/games.txt")
+    display_game_list(game_menu, games)
     
     app.withdraw()
   
@@ -49,21 +52,15 @@ def create_username_banner(parent, username, status, total_achievements):
     UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {total_achievements} | Status: {status}")
     UsernameBanner.pack(fill="x")
 
-# def display_friend_list(parent, friend_list, font_size=12):
-    """This function will print out the Friend List on the Main GUI
-    """
-   # for friend in friend_list:
-    #    parent.insert(ctk.END, str(friend) + "\n")
+def display_friend_list(parent, friend_list, font_size=12):
+    """This function will print out the Friend List on the Main GUI"""
+    for friend in friend_list:
+        parent.insert(END, str(friend) + "\n")
 
-#def display_game_list(parent, game_list, font_size=12):
-    """This function will print out the Game List on the Main GUI 
-    """
-    """ game_frame = ctk.CTkFrame(parent)
-    game_frame.pack(side="right", padx=10, pady=10)
-
+def display_game_list(parent, game_list, font_size=12):
+    """This function will print out the Game List on the Main GUI"""
     for game in game_list:
-        game_label = ctk.CTkLabel(game_frame, text=str(game), height=10, width=30)
-        game_label.pack() """
+        parent.insert(END, str(game) + "\n")
 
 def login():
     """This function explains what happens after you press Login.
