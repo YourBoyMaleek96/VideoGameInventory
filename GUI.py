@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import * 
-from main import calculate_achievement_score
+import main
 from FriendList import initialize_friend_list
 from GameList import initialize_game_list
 
@@ -25,14 +25,15 @@ def create_main_page(username, status,total_achievements, friend_list, game_list
     # Create the friend menu and banner
     friend_menu_frame = ctk.CTkFrame(MainPage, border_width=3)
     friend_banner = ctk.CTkLabel(friend_menu_frame, text="Friends List", padx=8, pady=5, font=("Helvetica", 16))
-    friend_banner.pack()# Adjust padding to move text up and to the left
-    friend_menu_frame.place(relx=0.3, rely=0.15, anchor="w")  # Adjust rely to move up a little more
+    friend_banner.pack()
+    friend_menu_frame.place(relx=0.3, rely=0.15, anchor="center")  # Set anchor to "center"
+
 
     # Create the game menu and banner
     game_menu_frame = ctk.CTkFrame(MainPage, border_width=3)
     game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  # Adjust font size
-    game_banner.pack()  # Adjust padding to move text up and to the left
-    game_menu_frame.place(relx=0.7, rely=0.15, anchor="w")  # Adjust rely to move up a little more
+    game_banner.pack()
+    game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")  # Set anchor to "center"
 
     # Create and place your textboxes (friend_menu and game_menu) here
     friend_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
