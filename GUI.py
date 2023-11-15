@@ -42,7 +42,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=remove_game_function)
     remove_game_button.pack(side=ctk.LEFT, padx=10)
 
-    logout_button = ctk.CTkButton(button_frame, text="Logout", command=logout_function)
+    logout_button = ctk.CTkButton(button_frame, text="Logout", command=app.destroy)
     logout_button.pack(side=ctk.LEFT, padx=10)
 
     app.withdraw()
@@ -105,9 +105,6 @@ def add_game_function():
 def remove_game_function():
     pass
 
-def logout_function():
-    pass
-
 def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
 
     """This function explains what happens after you press Login.
@@ -151,8 +148,3 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
-
-
-
-
-
