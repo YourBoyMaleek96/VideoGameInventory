@@ -15,6 +15,7 @@ app, login_frame, username_textbox, status_dropdown = create_login_page()
 # Create the login button
 login_button(login_frame, username_textbox, status_dropdown, app, user_friend_list, user_game_list)
 
+# Main Loop
 app.mainloop()
 
 #Debug print statements

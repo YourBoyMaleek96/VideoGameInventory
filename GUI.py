@@ -45,19 +45,12 @@ def friends_menu(parent, friend_list):
     friend_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
     friend_menu.place(relx=0.3, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4) 
     display_friend_list(friend_menu, friend_list)
-    #TODO: E. Cheng has to redo this  
-    #friends = initialize_friend_list("FriendList/friends.txt")
-    # display_friend_list(friend_menu, friends) 
 
 def games_menu(parent, game_list):
     """create menu to display games"""
     game_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
     game_menu.place(relx=0.7, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4)
-    display_game_list(game_menu, game_list)  
-    #TODO: E. Cheng has to redo not sure if app.withdraw is needed
-    #games = initialize_game_list("GameList/games.txt")
-    #display_game_list(game_menu, games)
-    #app.withdraw()
+    display_game_list(game_menu, game_list)
   
 def create_username_banner(parent, username, status):
     """Create the username banner with the given username, status, and total_achievements."""
@@ -101,8 +94,6 @@ def create_login_page():
     OnlineDrop = ctk.CTkComboBox(master=login_frame, values=["Online", "Offline", "Busy"])
     OnlineDrop.pack(pady=12, padx=10)
     return app, login_frame, UsernameTextbox, OnlineDrop
-
-
 
 def login_button(master,username_textbox, status_dropdown, app, user_friend_list, user_game_list):
     """Creates Login button"""
