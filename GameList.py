@@ -62,5 +62,11 @@ def remove_game(game_list, title):
     except ValueError as e:
         print(e)
 
+def calculate_achievement_score(list):
+    total_achievements = 0
 
+    for game in list:
+        total_achievements += game.num_achievements
+   
+    return total_achievements
    
