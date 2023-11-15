@@ -3,6 +3,7 @@ from tkinter import *
 
 #Constant for color theme
 BLUE = "#1f6aa5"
+DARK = "gray14"
 
 def create_banner_frame(parent, username, status, score):
     """Create the banner frame with the given username and status."""
@@ -26,7 +27,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     create_games_banner(MainPage)
     games_menu(MainPage, user_game_list)
 
-    button_frame = ctk.CTkFrame(MainPage)
+    button_frame = ctk.CTkFrame(MainPage,fg_color= DARK)
     button_frame.pack(pady=10)
 
     add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=add_friend_function)
@@ -48,14 +49,14 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     
 def create_friends_banner(parent):
     """Create the Friends List Label above the Friends List"""
-    friend_menu_frame = ctk.CTkFrame(parent, border_width=3)
+    friend_menu_frame = ctk.CTkFrame(parent, border_width=3, fg_color= DARK)
     friend_banner = ctk.CTkLabel(friend_menu_frame, text="Friends List", padx=8, pady=5, font=("Helvetica", 16))
     friend_banner.pack()
     friend_menu_frame.place(relx=0.3, rely=0.15, anchor="center")  
 
 def create_games_banner(parent):
     """Create the Games List Label above the Friends List"""
-    game_menu_frame = ctk.CTkFrame(parent, border_width=3)
+    game_menu_frame = ctk.CTkFrame(parent, border_width=3,fg_color= DARK)
     game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  # Adjust font size
     game_banner.pack()
     game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")
@@ -132,9 +133,9 @@ def create_login_page():
     app.geometry(f"{width}x{height}")
     app.title("Video Game Profile")
     ctk.set_appearance_mode("Dark")  # Set theme to dark mode
+    
     ctk.set_default_color_theme("blue")
     login_frame = ctk.CTkFrame(master=app)
-    login_frame._set_appearance_mode("Dark")
     login_frame.pack(pady=20, padx=40, fill='both', expand=True)
     label = ctk.CTkLabel(master=login_frame, text='Login Page')
     UsernameTextbox = ctk.CTkEntry(master=login_frame, placeholder_text="Enter Username")
