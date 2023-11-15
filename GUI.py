@@ -1,25 +1,22 @@
 import customtkinter as ctk
-from tkinter import * 
-from FriendList import initialize_friend_list
-from GameList import initialize_game_list
-
+from tkinter import *
 #Constant for color theme
 BLUE = "#1f6aa5"
 
-def create_banner_frame(parent, username, status):
+def create_banner_frame(parent, username, status, score):
     """Create the banner frame with the given username and status."""
     BannerFrame = ctk.CTkFrame(parent, border_width=2, fg_color=BLUE)
     BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
-    create_username_banner(BannerFrame, username, status)
+    create_username_banner(BannerFrame, username, status, score)
 
-def create_main_page(app, username, status, user_friend_list, user_game_list):
+def create_main_page(app, username, status, user_friend_list, user_game_list, score):
     """Create the main screen after the user has logged in"""
     MainPage = ctk.CTkToplevel()
     width = MainPage.winfo_screenwidth()
     height = MainPage.winfo_screenheight()
     MainPage.geometry(f"{width}x{height}")
     MainPage.title(" Video Game Profile")
-    create_banner_frame(MainPage, username, status)
+    create_banner_frame(MainPage, username, status, score)
     create_friends_banner(MainPage)
     friends_menu(MainPage, user_friend_list)
     create_games_banner(MainPage)
@@ -56,9 +53,9 @@ def games_menu(parent, game_list):
     display_game_list(game_menu, game_list)
     game_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
   
-def create_username_banner(parent, username, status):
+def create_username_banner(parent, username, status, score):
     """Create the username banner with the given username, status, and total_achievements."""
-    UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: 8 | Status: {status}")
+    UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {score} | Status: {status}")
     UsernameBanner.pack(fill="x")
 
 def display_friend_list(parent, friend_list, font_size=12):
@@ -71,14 +68,14 @@ def display_game_list(parent, game_list, font_size=12):
     for game in game_list:
         parent.insert(END, str(game) + "\n")
 
-def login(username_textbox, status_dropdown,app, user_friend_list, user_game_list):
+def login(username_textbox, status_dropdown,app, user_friend_list, user_game_list, score):
     """This function explains what happens after you press Login.
        It takes in a username and online status and displays it to the screen.
     """
     status = status_dropdown.get()
     if status in ["Online", "Offline", "Busy"]:
         username = username_textbox.get()
-        create_main_page(app,username,status, user_friend_list, user_game_list)
+        create_main_page(app,username,status, user_friend_list, user_game_list, score)
 
 def create_login_page():
     """ Creates the login window that displays login button and online status dropdown"""
@@ -99,9 +96,9 @@ def create_login_page():
     OnlineDrop.pack(pady=12, padx=10)
     return app, login_frame, UsernameTextbox, OnlineDrop
 
-def login_button(master,username_textbox, status_dropdown, app, user_friend_list, user_game_list):
+def login_button(master,username_textbox, status_dropdown, app, user_friend_list, user_game_list, score):
     """Creates Login button"""
-    LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda:login(username_textbox, status_dropdown,app, user_friend_list, user_game_list))
+    LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda:login(username_textbox, status_dropdown,app, user_friend_list, user_game_list, score))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
 
