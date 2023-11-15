@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import *
+
 #Constant for color theme
 BLUE = "#1f6aa5"
 
@@ -35,7 +36,7 @@ def create_games_banner(parent):
     game_menu_frame = ctk.CTkFrame(parent, border_width=3)
     game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  # Adjust font size
     game_banner.pack()
-    game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")  # Set anchor to "center"
+    game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")
 
 def friends_menu(parent, friend_list):   
     """create menu to display  friends""" 
@@ -68,14 +69,21 @@ def display_game_list(parent, game_list, font_size=12):
     for game in game_list:
         parent.insert(END, str(game) + "\n")
 
-def login(username_textbox, status_dropdown,app, user_friend_list, user_game_list, score):
+def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
     """This function explains what happens after you press Login.
        It takes in a username and online status and displays it to the screen.
     """
+    username = username_textbox.get()
+    if username.strip() == "":
+        error_label.configure(text="Username cannot be empty.")
+        error_label.pack()
+        return
+    else:
+        error_label.pack_forget()
+
     status = status_dropdown.get()
     if status in ["Online", "Offline", "Busy"]:
-        username = username_textbox.get()
-        create_main_page(app,username,status, user_friend_list, user_game_list, score)
+        create_main_page(app, username, status, user_friend_list, user_game_list, score)
 
 def create_login_page():
     """ Creates the login window that displays login button and online status dropdown"""
@@ -94,11 +102,13 @@ def create_login_page():
     UsernameTextbox.pack(pady=12, padx=10)
     OnlineDrop = ctk.CTkComboBox(master=login_frame, values=["Online", "Offline", "Busy"])
     OnlineDrop.pack(pady=12, padx=10)
-    return app, login_frame, UsernameTextbox, OnlineDrop
+    error_label = ctk.CTkLabel(master=login_frame, text="", fg_color="red")
+    error_label.pack(pady=5)
+    error_label.pack_forget()
+    return app, login_frame, UsernameTextbox, OnlineDrop, error_label
 
-def login_button(master,username_textbox, status_dropdown, app, user_friend_list, user_game_list, score):
-    """Creates Login button"""
-    LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda:login(username_textbox, status_dropdown,app, user_friend_list, user_game_list, score))
+def login_button(master, username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
+    LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
 
