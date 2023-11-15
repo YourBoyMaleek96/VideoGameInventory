@@ -17,11 +17,33 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     height = MainPage.winfo_screenheight()
     MainPage.geometry(f"{width}x{height}")
     MainPage.title(" Video Game Profile")
+    
     create_banner_frame(MainPage, username, status, score)
+    
     create_friends_banner(MainPage)
     friends_menu(MainPage, user_friend_list)
+    
     create_games_banner(MainPage)
     games_menu(MainPage, user_game_list)
+
+    button_frame = ctk.CTkFrame(MainPage)
+    button_frame.pack(pady=10)
+
+    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=add_friend_function)
+    add_friend_button.pack(side=ctk.LEFT, padx=10)
+
+    remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=remove_friend_function)
+    remove_friend_button.pack(side=ctk.LEFT, padx=10)
+
+    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=add_game_function)
+    add_game_button.pack(side=ctk.LEFT, padx=10)
+
+    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=remove_game_function)
+    remove_game_button.pack(side=ctk.LEFT, padx=10)
+
+    logout_button = ctk.CTkButton(button_frame, text="Logout", command=logout_function)
+    logout_button.pack(side=ctk.LEFT, padx=10)
+
     app.withdraw()
     
 def create_friends_banner(parent):
@@ -69,7 +91,24 @@ def display_game_list(parent, game_list, font_size=12):
     for game in game_list:
         parent.insert(END, str(game) + "\n")
 
+
+def add_friend_function():
+    pass
+
+def remove_friend_function():
+    pass
+
+def add_game_function():
+    pass
+
+def remove_game_function():
+    pass
+
+def logout_function():
+    pass
+
 def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
+
     """This function explains what happens after you press Login.
        It takes in a username and online status and displays it to the screen.
     """
@@ -111,9 +150,6 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
-
-
-
 
 
 
