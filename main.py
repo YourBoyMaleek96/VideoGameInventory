@@ -18,11 +18,11 @@ login_button(login_frame, username_textbox, status_dropdown, app, user_friend_li
 # Main Loop
 app.mainloop()
 
-#Debug print statements
-for game in user_game_list:
-    print(game)
-for friend in user_friend_list:
-    print(friend)
+# #Debug print statements
+# for game in user_game_list:
+#     print(game)
+# for friend in user_friend_list:
+#     print(friend)
 
 def calculate_achievement_score():
     total_achievements = 0
