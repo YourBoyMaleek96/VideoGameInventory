@@ -1,6 +1,6 @@
 import customtkinter as ctk
 from tkinter import *
-
+import tkinter.simpledialog as simpledialog
 #Constant for color theme
 BLUE = "#1f6aa5"
 DARK = "gray14"
@@ -25,7 +25,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     friends_menu(MainPage, user_friend_list)
     
     create_games_banner(MainPage)
-    games_menu(MainPage, user_game_list)
+    game_menu = games_menu(MainPage, user_game_list)
 
     button_frame = ctk.CTkFrame(MainPage,fg_color= DARK)
     button_frame.pack(pady=10)
@@ -36,7 +36,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=remove_friend_function)
     remove_friend_button.pack(side=ctk.LEFT, padx=10)
 
-    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=add_game_function)
+    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda menu=game_menu: add_game_function(menu))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
     remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=remove_game_function)
@@ -76,6 +76,7 @@ def games_menu(parent, game_list):
     game_menu._textbox.configure(state="normal", wrap="none", insertoff=1)
     display_game_list(game_menu, game_list)
     game_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
+    return game_menu    
   
 def create_username_banner(parent, username, status, score):
     """Create the username banner with the given username, status, and total_achievements."""
@@ -99,8 +100,44 @@ def add_friend_function():
 def remove_friend_function():
     pass
 
-def add_game_function():
-    pass
+def get_game_details(title_prompt, value_prompt):
+    input_dialog = ctk.CTkInputDialog(text=title_prompt)
+    value = input_dialog.get_input()
+    return value
+
+
+def add_game_function(game_menu):
+    """Function to add a game to the list and append to 'games.txt'."""
+    
+     # Get game title
+    title = get_game_details("Enter Game Title:", "Game Title")
+    
+    # Check if the user canceled the input
+    if title is None:
+        return
+    
+    # Get hours played
+    hours_played = get_game_details("Enter Hours Played:", "Hours Played")
+    
+    if hours_played is None:
+        return
+    
+    # Get achievements
+    achievements = get_game_details("Enter Achievements:", "Achievements")
+    
+    if achievements is None:
+        return
+    if title:
+       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}"
+
+        # Append game details to the 'games.txt' file
+    with open("games.txt", "a") as file:
+            file.write(game_details + "\n")
+
+        # Update the display in the GUI
+    game_menu._textbox.configure(state="normal")
+    game_menu.insert(END, game_details + "\n")
+    game_menu._textbox.configure(state="disabled")
 
 def remove_game_function():
     pass
