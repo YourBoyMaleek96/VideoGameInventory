@@ -40,14 +40,18 @@ def create_games_banner(parent):
 def friends_menu(parent, friend_list):   
     """create menu to display  friends""" 
     friend_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
-    friend_menu.place(relx=0.3, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4) 
+    friend_menu.place(relx=0.3, rely=0.4, anchor="center", relwidth=0.3, relheight=0.45)
+    friend_menu._textbox.configure(state="normal", wrap="none", insertoff=1) 
     display_friend_list(friend_menu, friend_list)
+    friend_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
 
 def games_menu(parent, game_list):
     """create menu to display games"""
     game_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
-    game_menu.place(relx=0.7, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4)
+    game_menu.place(relx=0.7, rely=0.4, anchor="center", relwidth=0.3, relheight=0.45)
+    game_menu._textbox.configure(state="normal", wrap="none", insertoff=1)
     display_game_list(game_menu, game_list)
+    game_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
   
 def create_username_banner(parent, username, status, score):
     """Create the username banner with the given username, status, and total_achievements."""
