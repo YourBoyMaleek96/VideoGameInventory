@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import *
-import tkinter.simpledialog as simpledialog
+import os
+
 #Constant for color theme
 BLUE = "#1f6aa5"
 DARK = "gray14"
@@ -36,7 +37,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=remove_friend_function)
     remove_friend_button.pack(side=ctk.LEFT, padx=10)
 
-    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda menu=game_menu: add_game_function(menu))
+    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(game_menu))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
     remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=remove_game_function)
@@ -129,10 +130,10 @@ def add_game_function(game_menu):
         return
     if title:
        game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}"
-
+       new_line = os.linesep 
         # Append game details to the 'games.txt' file
     with open("games.txt", "a") as file:
-            file.write(game_details + "\n")
+            file.write(game_details + os.linesep)
 
         # Update the display in the GUI
     game_menu._textbox.configure(state="normal")
@@ -188,6 +189,45 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
+
+def add_game_function(game_menu):
+    """Function to add a game to the list and append to 'games.txt'."""
+    # Specify the folder name
+    folder_name = "GameList"
+    
+    # Check if the folder exists, create it if not
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    
+    # Specify the file path
+    file_path = os.path.join(folder_name, "games.txt")
+     
+     # Get game title
+    title = get_game_details("Enter Game Title:", "Game Title")
+    
+    if title is None:
+        return
+    
+    hours_played = get_game_details("Enter Hours Played:", "Hours Played")
+    
+    if hours_played is None:
+        return
+    
+    achievements = get_game_details("Enter Achievements:", "Achievements")
+    
+    if achievements is None:
+        return
+    if title:
+       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}"
+
+        # Append game details to the 'games.txt' file
+    with open(file_path, "a") as file:
+            file.write(game_details)
+
+        # Update the display in the GUI
+    game_menu._textbox.configure(state="normal")
+    game_menu.insert(END, game_details + "\n")
+    game_menu._textbox.configure(state="disabled")
 
 
 
