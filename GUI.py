@@ -1,56 +1,65 @@
 import customtkinter as ctk
 from tkinter import * 
-import main
 from FriendList import initialize_friend_list
 from GameList import initialize_game_list
 
 #Constant for color theme
 BLUE = "#1f6aa5"
 
-def create_banner_frame(parent, username, status,total_achievements):
+def create_banner_frame(parent, username, status):
     """Create the banner frame with the given username and status."""
     BannerFrame = ctk.CTkFrame(parent, border_width=2, fg_color=BLUE)
     BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
-    create_username_banner(BannerFrame, username, status, total_achievements)
+    create_username_banner(BannerFrame, username, status)
 
-def create_main_page(username, status,total_achievements, friend_list, game_list):
+def create_main_page(app, username, status):
     """Create the main screen after the user has logged in"""
-    MainPage = ctk.CTkToplevel(app)
-    width = app.winfo_screenwidth()
-    height = app.winfo_screenheight()
+    MainPage = ctk.CTkToplevel()
+    width = MainPage.winfo_screenwidth()
+    height = MainPage.winfo_screenheight()
     MainPage.geometry(f"{width}x{height}")
     MainPage.title(" Video Game Profile")
-    create_banner_frame(MainPage, username, status,total_achievements)
+    create_banner_frame(MainPage, username, status)
+    create_friends_banner(MainPage)
+    friends_menu(MainPage)
+    create_games_banner(MainPage)
+    games_menu(MainPage)
+    app.withdraw()
     
-    # Create the friend menu and banner
-    friend_menu_frame = ctk.CTkFrame(MainPage, border_width=3)
+def create_friends_banner(parent):
+    """Create the Friends List Label above the Friends List"""
+    friend_menu_frame = ctk.CTkFrame(parent, border_width=3)
     friend_banner = ctk.CTkLabel(friend_menu_frame, text="Friends List", padx=8, pady=5, font=("Helvetica", 16))
     friend_banner.pack()
-    friend_menu_frame.place(relx=0.3, rely=0.15, anchor="center")  # Set anchor to "center"
+    friend_menu_frame.place(relx=0.3, rely=0.15, anchor="center")  
 
-
-    # Create the game menu and banner
-    game_menu_frame = ctk.CTkFrame(MainPage, border_width=3)
+def create_games_banner(parent):
+    """Create the Games List Label above the Friends List"""
+    game_menu_frame = ctk.CTkFrame(parent, border_width=3)
     game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  # Adjust font size
     game_banner.pack()
     game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")  # Set anchor to "center"
 
-    # Create and place your textboxes (friend_menu and game_menu) here
-    friend_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
+def friends_menu(parent):   
+    """create menu to display  friends""" 
+    friend_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
     friend_menu.place(relx=0.3, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4) 
-    friends = initialize_friend_list("FriendList/friends.txt")
-    display_friend_list(friend_menu, friends)
+    #TODO: E. Cheng has to redo this  
+    #friends = initialize_friend_list("FriendList/friends.txt")
+    # display_friend_list(friend_menu, friends) 
 
-    game_menu = ctk.CTkTextbox(MainPage, border_width=3, border_color=BLUE)
+def games_menu(parent):
+    """create menu to display games"""
+    game_menu = ctk.CTkTextbox(parent, border_width=3, border_color=BLUE)
     game_menu.place(relx=0.7, rely=0.4, anchor="center", relwidth=0.2, relheight=0.4)  
-    games = initialize_game_list("GameList/games.txt")
-    display_game_list(game_menu, games)
-    
-    app.withdraw()
+    #TODO: E. Cheng has to redo not sure if app.withdraw is needed
+    #games = initialize_game_list("GameList/games.txt")
+    #display_game_list(game_menu, games)
+    #app.withdraw()
   
-def create_username_banner(parent, username, status, total_achievements):
+def create_username_banner(parent, username, status):
     """Create the username banner with the given username, status, and total_achievements."""
-    UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {total_achievements} | Status: {status}")
+    UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: 8 | Status: {status}")
     UsernameBanner.pack(fill="x")
 
 def display_friend_list(parent, friend_list, font_size=12):
@@ -63,50 +72,50 @@ def display_game_list(parent, game_list, font_size=12):
     for game in game_list:
         parent.insert(END, str(game) + "\n")
 
-def login():
+def login(username_textbox, status_dropdown,app):
     """This function explains what happens after you press Login.
        It takes in a username and online status and displays it to the screen.
     """
-    status = OnlineDrop.get()
-
+    status = status_dropdown.get()
     if status in ["Online", "Offline", "Busy"]:
-        username = UsernameTextbox.get()
-        total_achievements = calculate_achievement_score()
+        username = username_textbox.get()
+        create_main_page(app,username,status)
+        #total_achievements = calculate_achievement_score()
 
-        friend_list = initialize_friend_list("FriendList/friends.txt")
-        game_list = initialize_game_list("GameList/games.txt")
+        #friend_list = initialize_friend_list("FriendList/friends.txt")
+        #game_list = initialize_game_list("GameList/games.txt")
+        #create_main_page(username, status, friend_list, game_list)
+        #create_main_page(username, status, total_achievements, friend_list, game_list)
 
-        create_main_page(username, status, total_achievements, friend_list, game_list)
-
-
-" Creates the login window that displays login button and online status dropdown"
-app = ctk.CTk() #main window for gui 
-width = app.winfo_screenwidth()
-height = app.winfo_screenheight()
-app.geometry(f"{width}x{height}")
-app.title("Video Game Profile")
-ctk.set_appearance_mode("Dark") #Set theme to dark mode 
-ctk.set_default_color_theme("blue")
-frame = ctk.CTkFrame(master = app)
-frame._set_appearance_mode("Dark")
-frame.pack(pady=20,padx=40,fill = 'both' ,expand = True)
-label = ctk.CTkLabel(master=frame, text = 'Login Page')
-label.pack(pady = 12, padx=10)
-UsernameTextbox = ctk.CTkEntry(master =frame, placeholder_text = "Enter Username")
-UsernameTextbox.pack(pady = 12, padx = 10)
-
-#Drop down for online status 
-OnlineDrop = ctk.CTkComboBox(master=frame, values = ["Online", "Offline", "Busy"])
-OnlineDrop.pack(pady = 12, padx = 10)
-
-
-#Login Button
-LoginButton = ctk.CTkButton(master=frame, text="Login", command= login)
-LoginButton.pack(pady=12, padx=10)
+def create_login_page():
+    """ Creates the login window that displays login button and online status dropdown"""
+    app = ctk.CTk()  # main window for GUI
+    width = app.winfo_screenwidth()
+    height = app.winfo_screenheight()
+    app.geometry(f"{width}x{height}")
+    app.title("Video Game Profile")
+    ctk.set_appearance_mode("Dark")  # Set theme to dark mode
+    ctk.set_default_color_theme("blue")
+    login_frame = ctk.CTkFrame(master=app)
+    login_frame._set_appearance_mode("Dark")
+    login_frame.pack(pady=20, padx=40, fill='both', expand=True)
+    label = ctk.CTkLabel(master=login_frame, text='Login Page')
+    UsernameTextbox = ctk.CTkEntry(master=login_frame, placeholder_text="Enter Username")
+    UsernameTextbox.pack(pady=12, padx=10)
+    OnlineDrop = ctk.CTkComboBox(master=login_frame, values=["Online", "Offline", "Busy"])
+    OnlineDrop.pack(pady=12, padx=10)
+    return app, login_frame, UsernameTextbox, OnlineDrop
 
 
 
-app.mainloop() #end gui window 
+def login_button(master,username_textbox, status_dropdown, app):
+    """Creates Login button"""
+    LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda:login(username_textbox, status_dropdown,app))
+    LoginButton.pack(pady=12, padx=10)
+    return LoginButton
+
+
+
 
 
 

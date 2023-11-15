@@ -1,11 +1,22 @@
 import GameList
 import FriendList
+import customtkinter as ctk
+from GUI import create_login_page, login_button
 
 #Create and load game array
 user_game_list = GameList.initialize_game_list('GameList/games.txt')
 
 #Create and load friend array
 user_friend_list = FriendList.initialize_friend_list('FriendList/friends.txt')
+
+# Create the login page
+app, login_frame, username_textbox, status_dropdown = create_login_page()
+
+# Create the login button
+login_button(login_frame, username_textbox, status_dropdown, app)
+
+app.mainloop()
+
 
 
 #Debug print statements
