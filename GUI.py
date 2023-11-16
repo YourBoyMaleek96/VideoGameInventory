@@ -102,7 +102,7 @@ def remove_friend_function():
     pass
 
 def get_game_details(title_prompt, value_prompt):
-    input_dialog = ctk.CTkInputDialog(text=title_prompt)
+    input_dialog = ctk.CTkInputDialog(text=title_prompt,title=value_prompt)
     value = input_dialog.get_input()
     return value
 
@@ -188,16 +188,6 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     return LoginButton
 
 def add_game_function(game_menu):
-    """Function to add a game to the list and append to 'games.txt'."""
-    # Specify the folder name
-    folder_name = "GameList"
-    
-    # Check if the folder exists, create it if not
-    if not os.path.exists(folder_name):
-        os.makedirs(folder_name)
-    
-    # Specify the file path
-    file_path = os.path.join(folder_name, "games.txt")
      
      # Get game title
     title = get_game_details("Enter Game Title:", "Game Title")
@@ -217,11 +207,7 @@ def add_game_function(game_menu):
     if title:
        game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
 
-        # Append game details to the 'games.txt' file
-    with open(file_path, "a") as file:
-            file.write(game_details)
-
-        # Update the display in the GUI
+    # Update the display in the GUI
     game_menu._textbox.configure(state="normal")
     game_menu.insert(END, game_details + "\n")
     game_menu._textbox.configure(state="disabled")
