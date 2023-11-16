@@ -24,7 +24,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     UsernameBanner = create_username_banner(BannerFrame, username, status, score)
     
     create_friends_banner(MainPage)
-    friends_menu(MainPage, user_friend_list)
+    friend_menu = friends_menu(MainPage, user_friend_list)
     
     create_games_banner(MainPage)
     game_menu = games_menu(MainPage, user_game_list)
@@ -32,7 +32,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     button_frame = ctk.CTkFrame(MainPage,fg_color= DARK)
     button_frame.pack(pady=10)
 
-    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friends_menu))
+    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friend_menu))
     add_friend_button.pack(side=ctk.LEFT, padx=10)
 
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend")
@@ -61,7 +61,7 @@ def create_friends_banner(parent):
 def create_games_banner(parent):
     """Create the Games List Label above the Friends List"""
     game_menu_frame = ctk.CTkFrame(parent, border_width=3,fg_color= DARK)
-    game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  # Adjust font size
+    game_banner = ctk.CTkLabel(game_menu_frame, text="Game List", padx=8, pady=5, font=("Helvetica", 16))  
     game_banner.pack()
     game_menu_frame.place(relx=0.7, rely=0.15, anchor="center")
 
@@ -72,6 +72,7 @@ def friends_menu(parent, friend_list):
     friend_menu._textbox.configure(state="normal", wrap="none", insertoff=1) 
     display_friend_list(friend_menu, friend_list)
     friend_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
+    return friend_menu
 
 def games_menu(parent, game_list):
     """create menu to display games"""
@@ -98,13 +99,6 @@ def display_game_list(parent, game_list, font_size=12):
     """This function will print out the Game List on the Main GUI"""
     for game in game_list:
         parent.insert(END, str(game) + "\n")
-
-
-def get_game_details(title_prompt, value_prompt):
-    input_dialog = ctk.CTkInputDialog(text=title_prompt,title=value_prompt)
-    value = input_dialog.get_input()
-    return value
-
 
 def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
 
@@ -146,6 +140,7 @@ def create_login_page():
     return app, login_frame, UsernameTextbox, OnlineDrop, error_label
 
 def login_button(master, username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
+    " This function creates the Login button which calls the login function"
     LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
@@ -180,14 +175,34 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
     game_menu.insert(END, game_details + "\n")
     game_menu._textbox.configure(state="disabled")
 
-
 def get_friend_details(title_prompt, value_prompt):
+    " This function creats dialog boxes for friend and center it"
     input_dialog = ctk.CTkInputDialog(text=title_prompt, title=value_prompt)
+    screen_width = input_dialog.winfo_screenwidth()
+    screen_height = input_dialog.winfo_screenheight()
+    dialog_width = input_dialog.winfo_reqwidth()
+    dialog_height = input_dialog.winfo_reqheight()
+    x = (screen_width - dialog_width) // 2
+    y = (screen_height - dialog_height) // 2
+    input_dialog.geometry(f"+{x}+{y}")
     value = input_dialog.get_input()
     return value
 
+def get_game_details(title_prompt, value_prompt):
+    " This function creats dialog boxes for games and center it"
+    input_dialog = ctk.CTkInputDialog(text=title_prompt, title=value_prompt)
+    screen_width = input_dialog.winfo_screenwidth()
+    screen_height = input_dialog.winfo_screenheight()
+    dialog_width = input_dialog.winfo_reqwidth()
+    dialog_height = input_dialog.winfo_reqheight()
+    x = (screen_width - dialog_width) // 2
+    y = (screen_height - dialog_height) // 2
+    input_dialog.geometry(f"+{x}+{y}")
+    value = input_dialog.get_input()
+    return value
 
-def add_friend_function(friends_menu):
+def add_friend_function(friend_menu):
+    " This function makes the prompts for add friend dialog boxes and checks them for data"
     username = get_friend_details("Enter Friend's Username:", "Friend's Username")
     
     if username is None:
@@ -198,7 +213,7 @@ def add_friend_function(friends_menu):
     if real_name is None:
         return
     
-    last_online = get_friend_details("Enter Last Online:", "Last Online")
+    last_online = get_friend_details("Enter Last Online:", "Hours Since Last Online")
     
     if last_online is None:
         return
@@ -207,10 +222,34 @@ def add_friend_function(friends_menu):
         friend_details = f"Username: {username}\nReal Name: {real_name}\nLast Online: {last_online}\n"
     
     # Update the display in the GUI
-    friends_menu._textbox.configure(state="normal")
-    friends_menu.insert(END, friend_details + "\n")
-    friends_menu._textbox.configure(state="disabled")
+    friend_menu._textbox.configure(state="normal")
+    friend_menu.insert(END, friend_details + "\n")
+    friend_menu._textbox.configure(state="disabled")
 
+
+def add_game_function(game_menu):
+    " This function makes the prompts for add friend dialog boxes and checks them for data" 
+    title = get_game_details("Enter Game Title:", "Game Title")
+
+    if title is None:
+        return
+    
+    hours_played = get_game_details("Enter Hours Played:", "Hours Played")
+    
+    if hours_played is None:
+        return
+    
+    achievements = get_game_details("Enter Achievements:", "Achievements")
+    
+    if achievements is None:
+        return
+    if title:
+       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
+
+    # Update the display in the GUI
+    game_menu._textbox.configure(state="normal")
+    game_menu.insert(END, game_details + "\n")
+    game_menu._textbox.configure(state="disabled")
 
 
 
