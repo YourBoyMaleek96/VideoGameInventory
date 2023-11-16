@@ -218,7 +218,7 @@ def add_game_function(game_menu):
     if achievements is None:
         return
     if title:
-       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}"
+       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
 
         # Append game details to the 'games.txt' file
     with open(file_path, "a") as file:
