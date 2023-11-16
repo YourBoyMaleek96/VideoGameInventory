@@ -33,8 +33,6 @@ def initialize_friend_list(file_path):
 
     return friend_list
 
-
-
 # Remove Friend Function
 def remove_friend(friend_list, user_name):
     try:
