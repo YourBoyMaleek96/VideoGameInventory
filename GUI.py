@@ -107,9 +107,9 @@ def get_game_details(title_prompt, value_prompt):
     value = input_dialog.get_input()
     return value
 
-def remove_game_function(game_menu, game_list):
+def remove_game_function(game_menu, user_game_list):
     # Extract game titles from the list of games
-    game_titles = [game.game_title for game in game_list]
+    game_titles = [game.game_title for game in user_game_list]
 
     # Create a a toplevel window for game removal
     remove_game_window = ctk.CTkToplevel()
@@ -119,7 +119,7 @@ def remove_game_function(game_menu, game_list):
     selected_games_vars = []
 
     def remove_selected_games():
-        nonlocal game_list, game_menu, selected_games_vars
+        nonlocal user_game_list, game_menu, selected_games_vars
 
         # Identify selected games
         selected_indices = [i for i, var in enumerate(selected_games_vars) if var.get() == 1]
@@ -127,12 +127,31 @@ def remove_game_function(game_menu, game_list):
         # Remove the selected games from both the list and the display
         for index in sorted(selected_indices, reverse=True):
             game_menu.configure(state="normal")
+
             start_index = game_menu.search(game_titles[index], "1.0", END)
             end_index = game_menu.search("\n\n", start_index, END)
-            game_menu.tag_remove("sel", start_index, end_index)
-            game_menu.delete(start_index, end_index)
+            
+             # Check if both indices are valid
+            if start_index and end_index: 
+                game_menu.tag_remove("sel", start_index, end_index)
+                game_menu.delete(start_index, end_index)
+
             game_menu.configure(state="disabled")
-            del game_list[index]
+
+            del user_game_list[index]
+
+        # Update the Game List Textbox and Remove Empty Entries
+        updated_game_menu_text = "\n\n".join([
+            f"Game Title: {game.game_title}\n"
+            f"Hours Played: {game.hours_played if hasattr(game, 'hours_played') else 'N/A'}\n"
+            f"Number of Achievements: {game.num_achievements if hasattr(game, 'num_achievements') else 'N/A'}"
+            for game in user_game_list if hasattr(game, 'game_title') and game.game_title.strip()
+        ])
+
+        game_menu.configure(state="normal")
+        game_menu.delete(1.0, END)
+        game_menu.insert(END, updated_game_menu_text + '\n\n')
+        game_menu.configure(state="disabled")
 
         remove_game_window.destroy()
 
@@ -144,7 +163,6 @@ def remove_game_function(game_menu, game_list):
         checkbox.pack(anchor=W)
 
     remove_button = ctk.CTkButton(remove_game_window, text="Remove Selected Games", command=remove_selected_games)
-    # Add a button to remove game
     remove_button.pack()
 
     # Add a button to close GUI without removing a game
