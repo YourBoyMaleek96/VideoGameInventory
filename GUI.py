@@ -32,7 +32,8 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     button_frame = ctk.CTkFrame(MainPage,fg_color= DARK)
     button_frame.pack(pady=10)
 
-    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friends_menu))
+    friend_menu_widget = friends_menu(MainPage, user_friend_list)
+    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friend_menu_widget))
     add_friend_button.pack(side=ctk.LEFT, padx=10)
 
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend")
@@ -72,6 +73,7 @@ def friends_menu(parent, friend_list):
     friend_menu._textbox.configure(state="normal", wrap="none", insertoff=1) 
     display_friend_list(friend_menu, friend_list)
     friend_menu._textbox.configure(state="disabled", wrap="none", insertoff=1)
+    return friend_menu
 
 def games_menu(parent, game_list):
     """create menu to display games"""
@@ -85,7 +87,6 @@ def games_menu(parent, game_list):
 def create_username_banner(parent, username, status, score):
     """Create the username banner with the given username, status, and total_achievements."""
     UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {score} | Status: {status}")
-    print("add_game_function: Updated UsernameBanner to 1")
     UsernameBanner.pack(fill="x")
     return UsernameBanner
 
