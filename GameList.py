@@ -33,19 +33,6 @@ def initialize_game_list(file_path):
 
     return game_list
 
-#Remove Game Function
-def remove_game(game_list, title):
-    try:
-        for i, game in enumerate(game_list):
-            if game.game_title == title:
-                del game_list[i]
-                print(f"Removed game: {title}")
-                return
-        
-        raise ValueError(f"No game found with title: {title}")
-    except ValueError as e:
-        print(e)
-
 def calculate_achievement_score(list):
     total_achievements = 0
 
