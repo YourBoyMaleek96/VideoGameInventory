@@ -1,16 +1,15 @@
 import customtkinter as ctk
 from tkinter import *
-import os
+from GameList import calculate_achievement_score, Game
 
 #Constant for color theme
 BLUE = "#1f6aa5"
 DARK = "gray14"
 
-def create_banner_frame(parent, username, status, score):
+def create_banner_frame(parent):
     """Create the banner frame with the given username and status."""
     BannerFrame = ctk.CTkFrame(parent, border_width=2, fg_color=BLUE)
     BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
-    create_username_banner(BannerFrame, username, status, score)
 
 def create_main_page(app, username, status, user_friend_list, user_game_list, score):
     """Create the main screen after the user has logged in"""
@@ -20,7 +19,9 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     MainPage.geometry(f"{width}x{height}")
     MainPage.title(" Video Game Profile")
     
-    create_banner_frame(MainPage, username, status, score)
+    BannerFrame = ctk.CTkFrame(MainPage, border_width=2, fg_color=BLUE)
+    BannerFrame.pack(side="top", fill="x", padx=10, pady=10)
+    UsernameBanner = create_username_banner(BannerFrame, username, status, score)
     
     create_friends_banner(MainPage)
     friends_menu(MainPage, user_friend_list)
@@ -37,7 +38,8 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend")
     remove_friend_button.pack(side=ctk.LEFT, padx=10)
 
-    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(game_menu))
+    # In create_main_page function
+    add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(app, game_menu, user_game_list, calculate_achievement_score, UsernameBanner, username, status))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
     remove_game_button = ctk.CTkButton(button_frame, text="Remove Game")
@@ -47,6 +49,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     logout_button.pack(side=ctk.LEFT, padx=10)
 
     app.withdraw()
+    return MainPage, UsernameBanner
     
 def create_friends_banner(parent):
     """Create the Friends List Label above the Friends List"""
@@ -82,7 +85,9 @@ def games_menu(parent, game_list):
 def create_username_banner(parent, username, status, score):
     """Create the username banner with the given username, status, and total_achievements."""
     UsernameBanner = ctk.CTkLabel(parent, text=f"{username} | Achievement Score: {score} | Status: {status}")
+    print("add_game_function: Updated UsernameBanner to 1")
     UsernameBanner.pack(fill="x")
+    return UsernameBanner
 
 def display_friend_list(parent, friend_list, font_size=12):
     """This function will print out the Friend List on the Main GUI"""
@@ -114,9 +119,9 @@ def login(username_textbox, status_dropdown, app, user_friend_list, user_game_li
     else:
         error_label.pack_forget()
 
-    status = status_dropdown.get()
+        status = status_dropdown.get()
     if status in ["Online", "Offline", "Busy"]:
-        create_main_page(app, username, status, user_friend_list, user_game_list, score)
+        MainPage, UsernameBanner = create_main_page(app, username, status, user_friend_list, user_game_list, score)
 
 def create_login_page():
     """ Creates the login window that displays login button and online status dropdown"""
@@ -145,7 +150,7 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
 
-def add_game_function(game_menu):
+def add_game_function(app, game_menu, user_game_list, calculate_score_func, username_banner, username, status):
      
     title = get_game_details("Enter Game Title:", "Game Title")
     
@@ -163,7 +168,13 @@ def add_game_function(game_menu):
         return
     if title:
        game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
+    
+    # Update the game list
+    user_game_list.append(Game(title, hours_played, achievements))
 
+    new_score = calculate_score_func(user_game_list)
+    username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
+    app.update()  # Refresh the app
     # Update the display in the GUI
     game_menu._textbox.configure(state="normal")
     game_menu.insert(END, game_details + "\n")
