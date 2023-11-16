@@ -33,21 +33,6 @@ def initialize_game_list(file_path):
 
     return game_list
 
-#Add Game Function
-def add_game(game_list, title, hours, achievements):
-    try:
-        if not title:
-            raise ValueError("Username and real name cannot be empty.")
-        hours = int(hours)
-        achievements = int(achievements)
-
-        new_game = Game(title, hours, achievements)
-        game_list.append(new_game)
-        
-    except ValueError:
-        print("Invalid data: 'hours played' and 'number of achievements' must be integers and 'username' must be added.")
-    except Exception as e:
-        print(f"An error occurred: {e}")
 
 #Remove Game Function
 def remove_game(game_list, title):
