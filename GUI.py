@@ -31,16 +31,16 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     button_frame = ctk.CTkFrame(MainPage,fg_color= DARK)
     button_frame.pack(pady=10)
 
-    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=add_friend_function)
+    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friends_menu))
     add_friend_button.pack(side=ctk.LEFT, padx=10)
 
-    remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=remove_friend_function)
+    remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend")
     remove_friend_button.pack(side=ctk.LEFT, padx=10)
 
     add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(game_menu))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
-    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=remove_game_function)
+    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game")
     remove_game_button.pack(side=ctk.LEFT, padx=10)
 
     logout_button = ctk.CTkButton(button_frame, text="Logout", command=app.destroy)
@@ -95,53 +95,11 @@ def display_game_list(parent, game_list, font_size=12):
         parent.insert(END, str(game) + "\n")
 
 
-def add_friend_function():
-    pass
-
-def remove_friend_function():
-    pass
-
 def get_game_details(title_prompt, value_prompt):
     input_dialog = ctk.CTkInputDialog(text=title_prompt,title=value_prompt)
     value = input_dialog.get_input()
     return value
 
-
-def add_game_function(game_menu):
-    """Function to add a game to the list and append to 'games.txt'."""
-    
-     # Get game title
-    title = get_game_details("Enter Game Title:", "Game Title")
-    
-    # Check if the user canceled the input
-    if title is None:
-        return
-    
-    # Get hours played
-    hours_played = get_game_details("Enter Hours Played:", "Hours Played")
-    
-    if hours_played is None:
-        return
-    
-    # Get achievements
-    achievements = get_game_details("Enter Achievements:", "Achievements")
-    
-    if achievements is None:
-        return
-    if title:
-       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}"
-       new_line = os.linesep 
-        # Append game details to the 'games.txt' file
-    with open("games.txt", "a") as file:
-            file.write(game_details + os.linesep)
-
-        # Update the display in the GUI
-    game_menu._textbox.configure(state="normal")
-    game_menu.insert(END, game_details + "\n")
-    game_menu._textbox.configure(state="disabled")
-
-def remove_game_function():
-    pass
 
 def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
 
@@ -189,7 +147,6 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
 
 def add_game_function(game_menu):
      
-     # Get game title
     title = get_game_details("Enter Game Title:", "Game Title")
     
     if title is None:
@@ -213,6 +170,35 @@ def add_game_function(game_menu):
     game_menu._textbox.configure(state="disabled")
 
 
+def get_friend_details(title_prompt, value_prompt):
+    input_dialog = ctk.CTkInputDialog(text=title_prompt, title=value_prompt)
+    value = input_dialog.get_input()
+    return value
+
+
+def add_friend_function(friends_menu):
+    username = get_friend_details("Enter Friend's Username:", "Friend's Username")
+    
+    if username is None:
+        return
+    
+    real_name = get_friend_details("Enter Friend's Real Name:", "Friend's Real Name")
+    
+    if real_name is None:
+        return
+    
+    last_online = get_friend_details("Enter Last Online:", "Last Online")
+    
+    if last_online is None:
+        return
+    
+    if username:
+        friend_details = f"Username: {username}\nReal Name: {real_name}\nLast Online: {last_online}\n"
+    
+    # Update the display in the GUI
+    friends_menu._textbox.configure(state="normal")
+    friends_menu.insert(END, friend_details + "\n")
+    friends_menu._textbox.configure(state="disabled")
 
 
 
