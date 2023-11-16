@@ -44,7 +44,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(app, game_menu, user_game_list, calculate_achievement_score, UsernameBanner, username, status))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
-    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=lambda: remove_game_function(game_menu, user_game_list))
+    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=lambda: remove_game_function(game_menu, user_game_list, calculate_achievement_score, UsernameBanner, username, status))
     remove_game_button.pack(side=ctk.LEFT, padx=10)
 
     logout_button = ctk.CTkButton(button_frame, text="Logout", command=app.destroy)
@@ -212,7 +212,7 @@ def add_friend_function(friends_menu):
     friends_menu.insert(END, friend_details + "\n")
     friends_menu._textbox.configure(state="disabled")
 
-def remove_game_function(game_menu, user_game_list):
+def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
     # Extract game titles from the list of games
     game_titles = [game.game_title for game in user_game_list]
 
@@ -245,6 +245,8 @@ def remove_game_function(game_menu, user_game_list):
             game_menu.configure(state="disabled")
 
             del user_game_list[index]
+            new_score = calculate_score_func(user_game_list)
+            username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
 
         # Update the Game List Textbox and Remove Empty Entries
         updated_game_menu_text = "\n\n".join([
