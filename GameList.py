@@ -3,8 +3,8 @@ class Game:
     #Initializes members of game object
     def __init__(self, game_title, hours_played, num_achievements):
         self.game_title = game_title
-        self.hours_played = hours_played
-        self.num_achievements = num_achievements
+        self.hours_played = int(hours_played)
+        self.num_achievements = int(num_achievements)
 
     #Prints members of game object
     def __str__(self):
@@ -32,7 +32,6 @@ def initialize_game_list(file_path):
         print(f"An unexpected error occurred: {e}")
 
     return game_list
-
 
 #Remove Game Function
 def remove_game(game_list, title):
