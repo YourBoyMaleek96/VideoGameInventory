@@ -33,15 +33,3 @@ def initialize_friend_list(file_path):
 
     return friend_list
 
-# Remove Friend Function
-def remove_friend(friend_list, user_name):
-    try:
-        for i, friend in enumerate(friend_list):
-            if friend.user_name == user_name:
-                del friend_list[i]
-                print(f"Removed friend: {user_name}")
-                return
-            
-        raise ValueError(f"No friend found with username: {user_name}")
-    except ValueError as e:
-        print(e)

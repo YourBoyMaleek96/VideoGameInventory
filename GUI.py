@@ -34,8 +34,8 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friend_menu))
     add_friend_button.pack(side=ctk.LEFT, padx=10)
 
-    remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend")
-    remove_friend_button.pack(side=ctk.LEFT, padx=10)
+    #remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=remove_friend)
+    #remove_friend_button.pack(side=ctk.LEFT, padx=10)
 
     add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(game_menu))
     add_game_button.pack(side=ctk.LEFT, padx=10)
@@ -217,5 +217,25 @@ def add_game_function(game_menu):
     game_menu.insert(END, game_details + "\n")
     game_menu._textbox.configure(state="disabled")
 
+def remove_friend_button(frame, friend_list, error_label):
+    def remove_friend():
+        selected_friend = friends_dropdown.get()
+        if selected_friend:
+            friend_list.remove(selected_friend)
+            update_friends_dropdown(friends_dropdown, friend_list)
+            error_label.config(text="")
+        else:
+            error_label.config(text="Please select a friend to remove.")
 
+    friends_label = ctk.CTkLabelLabel(frame, text="Select friend to remove:")
+    friends_label.grid(row=2, column=0, pady=5, padx=5, sticky=ctk.W)
 
+    friends_dropdown = ctk.CTkComboBox(frame, values=friend_list)
+    friends_dropdown.grid(row=2, column=1, pady=5, padx=5, sticky=ctk.W)
+
+    remove_button = ctk.CTkButton(frame, text="Remove Friend", command=remove_friend)
+    remove_button.grid(row=2, column=2, pady=5, padx=5, sticky=ctk.W)
+
+def update_friends_dropdown(friends_dropdown, friend_list):
+    friends_dropdown['values'] = friend_list
+    friends_dropdown.set("")  # Clear the selection
