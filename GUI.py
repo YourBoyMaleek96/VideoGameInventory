@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import *
 from GameList import calculate_achievement_score, Game
+from tkinter import IntVar, Checkbutton, END, W
 
 #Constant for color theme
 BLUE = "#1f6aa5"
@@ -43,7 +44,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     add_game_button = ctk.CTkButton(button_frame, text="Add Game", command=lambda: add_game_function(app, game_menu, user_game_list, calculate_achievement_score, UsernameBanner, username, status))
     add_game_button.pack(side=ctk.LEFT, padx=10)
 
-    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game")
+    remove_game_button = ctk.CTkButton(button_frame, text="Remove Game", command=lambda: remove_game_function(game_menu, user_game_list))
     remove_game_button.pack(side=ctk.LEFT, padx=10)
 
     logout_button = ctk.CTkButton(button_frame, text="Logout", command=app.destroy)
@@ -106,6 +107,49 @@ def get_game_details(title_prompt, value_prompt):
     value = input_dialog.get_input()
     return value
 
+def remove_game_function(game_menu, game_list):
+    # Extract game titles from the list of games
+    game_titles = [game.game_title for game in game_list]
+
+    # Create a a toplevel window for game removal
+    remove_game_window = ctk.CTkToplevel()
+    remove_game_window.title("Remove Games")
+
+    # Create a list to store the game and its contents for each checkbox
+    selected_games_vars = []
+
+    def remove_selected_games():
+        nonlocal game_list, game_menu, selected_games_vars
+
+        # Identify selected games
+        selected_indices = [i for i, var in enumerate(selected_games_vars) if var.get() == 1]
+
+        # Remove the selected games from both the list and the display
+        for index in sorted(selected_indices, reverse=True):
+            game_menu.configure(state="normal")
+            start_index = game_menu.search(game_titles[index], "1.0", END)
+            end_index = game_menu.search("\n\n", start_index, END)
+            game_menu.tag_remove("sel", start_index, end_index)
+            game_menu.delete(start_index, end_index)
+            game_menu.configure(state="disabled")
+            del game_list[index]
+
+        remove_game_window.destroy()
+
+    # Create a checkbox for each game
+    for game_title in game_titles:
+        var = IntVar()
+        selected_games_vars.append(var)
+        checkbox = Checkbutton(remove_game_window, text=game_title, variable=var)
+        checkbox.pack(anchor=W)
+
+    remove_button = ctk.CTkButton(remove_game_window, text="Remove Selected Games", command=remove_selected_games)
+    # Add a button to remove game
+    remove_button.pack()
+
+    # Add a button to close GUI without removing a game
+    cancel_button = ctk.CTkButton(remove_game_window, text="Cancel", command=remove_game_window.destroy)
+    cancel_button.pack()
 
 def login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
 
