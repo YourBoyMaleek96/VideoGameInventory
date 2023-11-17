@@ -285,8 +285,6 @@ def remove_friend_function(friend_menu, user_friend_list):
     # Extract friend usernames from the list of friends
     user_names = [friend.user_name for friend in user_friend_list]
 
-    print("Usernames:", user_names)
-
     # Create a toplevel window for game removal
     remove_friend_window = ctk.CTkToplevel()
     remove_friend_window.title("Remove Friends")
@@ -300,7 +298,6 @@ def remove_friend_function(friend_menu, user_friend_list):
 
         # Identify selected friends
         selected_indices = [i for i, var in enumerate(selected_friends_vars) if var.get() == 1]
-        print("Selected Indices:", selected_indices)
 
         #Remove the selected friends from both the list and the display
         for index in sorted(selected_indices, reverse=True):
@@ -310,9 +307,6 @@ def remove_friend_function(friend_menu, user_friend_list):
             user_name = user_names[index]
             start_index = friend_menu.search(user_name, "1.0", END)
             end_index = friend_menu.search("\n\n", start_index, END)
-
-            print("Start Index:", start_index)
-            print("End Index:", end_index)
 
             # Check if both indices are valid
             if start_index and end_index:
