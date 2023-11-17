@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import *
 from GameList import calculate_achievement_score, Game
-
+from FriendList import Friend
 #Constant for color theme
 BLUE = "#1f6aa5"
 DARK = "gray14"
@@ -33,7 +33,7 @@ def create_main_page(app, username, status, user_friend_list, user_game_list, sc
     button_frame.pack(pady=10)
 
     friend_menu_widget = friends_menu(MainPage, user_friend_list)
-    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friend_menu_widget))
+    add_friend_button = ctk.CTkButton(button_frame, text="Add Friend", command=lambda: add_friend_function(friend_menu_widget, user_friend_list))
     add_friend_button.pack(side=ctk.LEFT, padx=10)
 
     remove_friend_button = ctk.CTkButton(button_frame, text="Remove Friend", command=lambda: remove_friend_function(friend_menu_widget, user_friend_list))
@@ -187,29 +187,31 @@ def get_friend_details(title_prompt, value_prompt):
     return value
 
 
-def add_friend_function(friends_menu):
+def add_friend_function(friends_menu, user_friend_list):
     username = get_friend_details("Enter Friend's Username:", "Friend's Username")
-    
     if username is None:
         return
-    
+
     real_name = get_friend_details("Enter Friend's Real Name:", "Friend's Real Name")
-    
     if real_name is None:
         return
-    
+
     last_online = get_friend_details("Enter Last Online:", "Hours since Last Online:")
-    
     if last_online is None:
         return
-    
+
     if username:
-        friend_details = f"Username: {username}\nReal Name: {real_name}\nHours since Last Online: {last_online}\n"
-    
-    # Update the display in the GUI
-    friends_menu._textbox.configure(state="normal")
-    friends_menu.insert(END, friend_details + "\n")
-    friends_menu._textbox.configure(state="disabled")
+        # Create a new Friend object
+        new_friend = Friend(username, real_name, last_online)
+
+        # Add the new friend to the user_friend_list
+        user_friend_list.append(new_friend)
+
+        # Update the display in the GUI
+        friend_details = str(new_friend)
+        friends_menu._textbox.configure(state="normal")
+        friends_menu.insert(END, friend_details + "\n")
+        friends_menu._textbox.configure(state="disabled")
 
 def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
     # Extract game titles from the list of games
