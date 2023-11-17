@@ -191,27 +191,37 @@ def add_friend_function(friends_menu, user_friend_list):
     username = get_friend_details("Enter Friend's Username:", "Friend's Username")
     if username is None:
         return
+    elif username.strip() == "":
+        tkinter.messagebox.showerror("Error", "Username cannot be empty.")
+        return
 
     real_name = get_friend_details("Enter Friend's Real Name:", "Friend's Real Name")
-    if real_name is None:
+    if real_name is None or real_name.strip() == "":
+        tkinter.messagebox.showerror("Error", "Real name cannot be empty.")
         return
 
     last_online = get_friend_details("Enter Last Online:", "Hours since Last Online:")
-    if last_online is None:
+    if last_online is None or last_online.strip() == "":
+        tkinter.messagebox.showerror("Error", "Hours last online cannot be empty.")
         return
-
-    if username:
-        # Create a new Friend object
-        new_friend = Friend(username, real_name, last_online)
-
-        # Add the new friend to the user_friend_list
-        user_friend_list.append(new_friend)
+    try:
+        last_online = int(last_online)
+        if last_online < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Hours last online must be a non-negative integer.")
+        return
+    
+    # If all inputs are valid, proceed with adding the game
+    friend_details = f"Username: {username}\nReal Name: {real_name}\nHours since Last Online: {last_online}\n"
+    
+    # Add the new friend to the user_friend_list
+    user_friend_list.append(Friend(username, real_name, last_online))
 
         # Update the display in the GUI
-        friend_details = str(new_friend)
-        friends_menu._textbox.configure(state="normal")
-        friends_menu.insert(END, friend_details + "\n")
-        friends_menu._textbox.configure(state="disabled")
+    friends_menu._textbox.configure(state="normal")
+    friends_menu.insert(END, friend_details + "\n")
+    friends_menu._textbox.configure(state="disabled")
 
 def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
     # Extract game titles from the list of games
@@ -231,6 +241,11 @@ def remove_game_function(game_menu, user_game_list, calculate_score_func, userna
         # Identify selected games
         selected_indices = [i for i, var in enumerate(selected_games_vars) if var.get() == 1]
 
+         # Error handling if no game is selected
+        if not selected_indices:
+            tkinter.messagebox.showerror("Error", "Please select at least one game to remove.")
+            return
+        
         # Remove the selected games from both the list and the display
         for index in sorted(selected_indices, reverse=True):
             game_menu.configure(state="normal")
@@ -285,7 +300,9 @@ def remove_friend_function(friend_menu, user_friend_list):
     # Extract friend usernames from the list of friends
     user_names = [friend.user_name for friend in user_friend_list]
 
-    print("Usernames:", user_names)
+    if not user_names:
+        tkinter.messagebox.showerror("Error", "No friends to remove.")
+        return
 
     # Create a toplevel window for game removal
     remove_friend_window = ctk.CTkToplevel()
@@ -300,7 +317,11 @@ def remove_friend_function(friend_menu, user_friend_list):
 
         # Identify selected friends
         selected_indices = [i for i, var in enumerate(selected_friends_vars) if var.get() == 1]
-        print("Selected Indices:", selected_indices)
+
+        # Error handling if no game is selected
+        if not selected_indices:
+            tkinter.messagebox.showerror("Error", "Please select at least one friend to remove.")
+            return
 
         #Remove the selected friends from both the list and the display
         for index in sorted(selected_indices, reverse=True):
@@ -310,9 +331,6 @@ def remove_friend_function(friend_menu, user_friend_list):
             user_name = user_names[index]
             start_index = friend_menu.search(user_name, "1.0", END)
             end_index = friend_menu.search("\n\n", start_index, END)
-
-            print("Start Index:", start_index)
-            print("End Index:", end_index)
 
             # Check if both indices are valid
             if start_index and end_index:
@@ -324,17 +342,7 @@ def remove_friend_function(friend_menu, user_friend_list):
             del user_friend_list[index]
 
         # Update the Friends List Textbox and Remove Empty Entries
-        updated_friend_menu_text = "\n\n".join([
-            f"Username: {friend.user_name}\n"
-            f"Real Name: {friend.real_name if hasattr(friend, 'real_name') else 'N/A'}\n"
-            f"Hours since Last Online: {friend.last_online if hasattr(friend, 'last_online') else 'N/A'}\n"
-            for friend in user_friend_list if hasattr(friend, 'user_name') and friend.user_name.strip()
-        ])
-
-        friend_menu.configure(state="normal")
-        friend_menu.delete(1.0, END)
-        friend_menu.insert(END, updated_friend_menu_text + '\n\n')
-        friend_menu.configure(state="disabled")
+        update_friend_menu(friend_menu, user_friend_list)
 
         remove_friend_window.destroy()
 
@@ -353,4 +361,11 @@ def remove_friend_function(friend_menu, user_friend_list):
     cancel_button = ctk.CTkButton(remove_friend_window, text="Cancel", command=remove_friend_window.destroy)
     cancel_button.pack()
 
-
+def update_friend_menu(friend_menu, user_friend_list):
+    """Update the content of the game menu after removal."""
+    friend_menu.configure(state="normal")
+    friend_menu.delete(1.0, END)
+    for friend in user_friend_list:
+        friend_details = f"Username: {friend.user_name}\nReal Name: {friend.real_name if hasattr(friend, 'last_online') else 'N/A'}\nHours since Last Online: {friend.last_online if hasattr(friend, 'last_online') else 'N/A'}\n\n"
+        friend_menu.insert(END, friend_details)
+    friend_menu.configure(state="disabled")
