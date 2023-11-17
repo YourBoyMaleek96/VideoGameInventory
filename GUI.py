@@ -189,29 +189,38 @@ def get_friend_details(title_prompt, value_prompt):
 
 def add_friend_function(friends_menu, user_friend_list):
     username = get_friend_details("Enter Friend's Username:", "Friend's Username")
-    if username is None:
+    if username is None or username.strip() == "":
+        tkinter.messagebox.showerror("Error", "Username cannot be empty.")
         return
 
     real_name = get_friend_details("Enter Friend's Real Name:", "Friend's Real Name")
-    if real_name is None:
+    if real_name is None or real_name.strip() == "":
+        tkinter.messagebox.showerror("Error", "Real name cannot be empty.")
         return
 
     last_online = get_friend_details("Enter Last Online:", "Hours since Last Online:")
-    if last_online is None:
+    if last_online is None or last_online.strip() == "":
+        tkinter.messagebox.showerror("Error", "Hours last online cannot be empty.")
+        return
+    try:
+        last_online = int(last_online)
+        if last_online < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Hours last online must be a non-negative integer.")
         return
 
-    if username:
-        # Create a new Friend object
-        new_friend = Friend(username, real_name, last_online)
+    # Create a new Friend object
+    new_friend = Friend(username, real_name, last_online)
 
-        # Add the new friend to the user_friend_list
-        user_friend_list.append(new_friend)
+    # Add the new friend to the user_friend_list
+    user_friend_list.append(new_friend)
 
         # Update the display in the GUI
-        friend_details = str(new_friend)
-        friends_menu._textbox.configure(state="normal")
-        friends_menu.insert(END, friend_details + "\n")
-        friends_menu._textbox.configure(state="disabled")
+    friend_details = str(new_friend)
+    friends_menu._textbox.configure(state="normal")
+    friends_menu.insert(END, friend_details + "\n")
+    friends_menu._textbox.configure(state="disabled")
 
 def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
     # Extract game titles from the list of games
