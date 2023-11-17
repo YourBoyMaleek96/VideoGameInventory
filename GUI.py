@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import *
 from GameList import calculate_achievement_score, Game
+from tkinter import IntVar, Checkbutton, END, W
+import tkinter.messagebox
 from FriendList import Friend
 #Constant for color theme
 BLUE = "#1f6aa5"
@@ -151,23 +153,40 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     return LoginButton
 
 def add_game_function(app, game_menu, user_game_list, calculate_score_func, username_banner, username, status):
-     
+    # Get Game Title
     title = get_game_details("Enter Game Title:", "Game Title")
-    
-    if title is None:
+    if title is None or title.strip() == "":
+        tkinter.messagebox.showerror("Error", "Game title cannot be empty.")
         return
-    
+
+    # Get Hours Played
     hours_played = get_game_details("Enter Hours Played:", "Hours Played")
-    
-    if hours_played is None:
+    if hours_played is None or hours_played.strip() == "":
+        tkinter.messagebox.showerror("Error", "Hours played cannot be empty.")
         return
-    
+    try:
+        hours_played = int(hours_played)
+        if hours_played < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Hours played must be a non-negative integer.")
+        return
+
+    # Get Achievements
     achievements = get_game_details("Enter Achievements:", "Achievements")
-    
-    if achievements is None:
+    if achievements is None or achievements.strip() == "":
+        tkinter.messagebox.showerror("Error", "Achievements cannot be empty.")
         return
-    if title:
-       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
+    try:
+        achievements = int(achievements)
+        if achievements < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Achievements must be a non-negative integer.")
+        return
+
+    # If all inputs are valid, proceed with adding the game
+    game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
     
     # Update the game list
     user_game_list.append(Game(title, hours_played, achievements))
@@ -175,6 +194,7 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
     new_score = calculate_score_func(user_game_list)
     username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
     app.update()  # Refresh the app
+    
     # Update the display in the GUI
     game_menu._textbox.configure(state="normal")
     game_menu.insert(END, game_details + "\n")
@@ -223,11 +243,19 @@ def add_friend_function(friends_menu, user_friend_list):
     friends_menu.insert(END, friend_details + "\n")
     friends_menu._textbox.configure(state="disabled")
 
+import tkinter.messagebox
+
 def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
     # Extract game titles from the list of games
     game_titles = [game.game_title for game in user_game_list]
 
+    if not game_titles:
+        tkinter.messagebox.showerror("Error", "No games to remove.")
+        return
+
+    
     # Create a toplevel window for game removal
+
     remove_game_window = ctk.CTkToplevel()
     remove_game_window.title("Remove Games")
     remove_game_window.grab_set()
@@ -235,17 +263,20 @@ def remove_game_function(game_menu, user_game_list, calculate_score_func, userna
     # Create a list to store the games and its contents for each checkbox
     selected_games_vars = []
 
+    # Function to remove selected games
     def remove_selected_games():
         nonlocal user_game_list, game_menu, selected_games_vars
 
         # Identify selected games
         selected_indices = [i for i, var in enumerate(selected_games_vars) if var.get() == 1]
 
+
          # Error handling if no game is selected
         if not selected_indices:
             tkinter.messagebox.showerror("Error", "Please select at least one game to remove.")
             return
         
+
         # Remove the selected games from both the list and the display
         for index in sorted(selected_indices, reverse=True):
             game_menu.configure(state="normal")
@@ -254,29 +285,20 @@ def remove_game_function(game_menu, user_game_list, calculate_score_func, userna
             start_index = game_menu.search(game_titles[index], "1.0", END)
             end_index = game_menu.search("\n\n", start_index, END)
             
-             # Check if both indices are valid
-            if start_index and end_index: 
+            # Check if both indices are valid
+            if start_index and end_index:
                 game_menu.tag_remove("sel", start_index, end_index)
                 game_menu.delete(start_index, end_index)
 
             game_menu.configure(state="disabled")
 
             del user_game_list[index]
-            new_score = calculate_score_func(user_game_list)
-            username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
+
+        new_score = calculate_score_func(user_game_list)
+        username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
 
         # Update the Game List Textbox and Remove Empty Entries
-        updated_game_menu_text = "\n\n".join([
-            f"Game Title: {game.game_title}\n"
-            f"Hours Played: {game.hours_played if hasattr(game, 'hours_played') else 'N/A'}\n"
-            f"Number of Achievements: {game.num_achievements if hasattr(game, 'num_achievements') else 'N/A'}"
-            for game in user_game_list if hasattr(game, 'game_title') and game.game_title.strip()
-        ])
-
-        game_menu.configure(state="normal")
-        game_menu.delete(1.0, END)
-        game_menu.insert(END, updated_game_menu_text + '\n\n')
-        game_menu.configure(state="disabled")
+        update_game_menu(game_menu, user_game_list)
 
         remove_game_window.destroy()
 
@@ -295,7 +317,17 @@ def remove_game_function(game_menu, user_game_list, calculate_score_func, userna
     cancel_button = ctk.CTkButton(remove_game_window, text="Cancel", command=remove_game_window.destroy)
     cancel_button.pack()
 
-# THIS WORKS EXCEPT FOR ADDED FRIENDS - Remove Friend will Remove Added Friends
+
+def update_game_menu(game_menu, user_game_list):
+    """Update the content of the game menu after removal."""
+    game_menu.configure(state="normal")
+    game_menu.delete(1.0, END)
+    for game in user_game_list:
+        game_details = f"Game Title: {game.game_title}\nHours Played: {game.hours_played if hasattr(game, 'hours_played') else 'N/A'}\nNumber of Achievements: {game.num_achievements if hasattr(game, 'num_achievements') else 'N/A'}\n\n"
+        game_menu.insert(END, game_details)
+    game_menu.configure(state="disabled")
+
+
 def remove_friend_function(friend_menu, user_friend_list):
     # Extract friend usernames from the list of friends
     user_names = [friend.user_name for friend in user_friend_list]
@@ -360,6 +392,7 @@ def remove_friend_function(friend_menu, user_friend_list):
     # Add a button to close the GUI without removing a friend
     cancel_button = ctk.CTkButton(remove_friend_window, text="Cancel", command=remove_friend_window.destroy)
     cancel_button.pack()
+
 
 def update_friend_menu(friend_menu, user_friend_list):
     """Update the content of the game menu after removal."""
