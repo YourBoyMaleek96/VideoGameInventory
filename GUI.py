@@ -2,6 +2,7 @@ import customtkinter as ctk
 from tkinter import *
 from GameList import calculate_achievement_score, Game
 from tkinter import IntVar, Checkbutton, END, W
+import tkinter.messagebox
 
 #Constant for color theme
 BLUE = "#1f6aa5"
@@ -152,23 +153,40 @@ def login_button(master, username_textbox, status_dropdown, app, user_friend_lis
     return LoginButton
 
 def add_game_function(app, game_menu, user_game_list, calculate_score_func, username_banner, username, status):
-     
+    # Get Game Title
     title = get_game_details("Enter Game Title:", "Game Title")
-    
-    if title is None:
+    if title is None or title.strip() == "":
+        tkinter.messagebox.showerror("Error", "Game title cannot be empty.")
         return
-    
+
+    # Get Hours Played
     hours_played = get_game_details("Enter Hours Played:", "Hours Played")
-    
-    if hours_played is None:
+    if hours_played is None or hours_played.strip() == "":
+        tkinter.messagebox.showerror("Error", "Hours played cannot be empty.")
         return
-    
+    try:
+        hours_played = int(hours_played)
+        if hours_played < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Hours played must be a non-negative integer.")
+        return
+
+    # Get Achievements
     achievements = get_game_details("Enter Achievements:", "Achievements")
-    
-    if achievements is None:
+    if achievements is None or achievements.strip() == "":
+        tkinter.messagebox.showerror("Error", "Achievements cannot be empty.")
         return
-    if title:
-       game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
+    try:
+        achievements = int(achievements)
+        if achievements < 0:
+            raise ValueError
+    except ValueError:
+        tkinter.messagebox.showerror("Error", "Achievements must be a non-negative integer.")
+        return
+
+    # If all inputs are valid, proceed with adding the game
+    game_details = f"Game Title: {title}\nHours Played: {hours_played}\nNumber of Achievements: {achievements}\n"
     
     # Update the game list
     user_game_list.append(Game(title, hours_played, achievements))
@@ -176,6 +194,7 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
     new_score = calculate_score_func(user_game_list)
     username_banner.configure(text=f"{username} | Achievement Score: {new_score} | Status: {status}")
     app.update()  # Refresh the app
+    
     # Update the display in the GUI
     game_menu._textbox.configure(state="normal")
     game_menu.insert(END, game_details + "\n")
