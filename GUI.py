@@ -1,9 +1,10 @@
 import customtkinter as ctk
+import tkinter.messagebox
 from tkinter import *
 from GameList import calculate_achievement_score, Game
-from tkinter import IntVar, Checkbutton, END, W
-import tkinter.messagebox
 from FriendList import Friend
+
+
 #Constant for color theme
 BLUE = "#1f6aa5"
 DARK = "gray14"
@@ -104,7 +105,9 @@ def display_game_list(parent, game_list, font_size=12):
 
 
 def get_game_details(title_prompt, value_prompt):
+    """Creates dialog boxes for game details"""
     input_dialog = ctk.CTkInputDialog(text=title_prompt,title=value_prompt)
+    center_dialog_boxes(input_dialog)
     value = input_dialog.get_input()
     return value
 
@@ -133,7 +136,6 @@ def create_login_page():
     app.geometry(f"{width}x{height}")
     app.title("Video Game Profile")
     ctk.set_appearance_mode("Dark")  # Set theme to dark mode
-    
     ctk.set_default_color_theme("blue")
     login_frame = ctk.CTkFrame(master=app)
     login_frame.pack(pady=20, padx=40, fill='both', expand=True)
@@ -148,11 +150,13 @@ def create_login_page():
     return app, login_frame, UsernameTextbox, OnlineDrop, error_label
 
 def login_button(master, username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label):
+    """Creates the login button """
     LoginButton = ctk.CTkButton(master=master, text="Login", command=lambda: login(username_textbox, status_dropdown, app, user_friend_list, user_game_list, score, error_label))
     LoginButton.pack(pady=12, padx=10)
     return LoginButton
 
 def add_game_function(app, game_menu, user_game_list, calculate_score_func, username_banner, username, status):
+    """This function handles the logic for adding a game"""
     # Get Game Title
     title = get_game_details("Enter Game Title:", "Game Title")
     if title is None or title.strip() == "":
@@ -202,12 +206,15 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
 
 
 def get_friend_details(title_prompt, value_prompt):
+    """Creates dialog boxes for friend details"""
     input_dialog = ctk.CTkInputDialog(text=title_prompt, title=value_prompt)
+    center_dialog_boxes(input_dialog)
     value = input_dialog.get_input()
     return value
 
 
 def add_friend_function(friends_menu, user_friend_list):
+    """This function handles the logic for adding a friend"""
     username = get_friend_details("Enter Friend's Username:", "Friend's Username")
     if username is None:
         return
@@ -243,9 +250,9 @@ def add_friend_function(friends_menu, user_friend_list):
     friends_menu.insert(END, friend_details + "\n")
     friends_menu._textbox.configure(state="disabled")
 
-import tkinter.messagebox
 
 def remove_game_function(game_menu, user_game_list, calculate_score_func, username_banner, username, status):
+    """Handles the logic for removing a game"""
     # Extract game titles from the list of games
     game_titles = [game.game_title for game in user_game_list]
 
@@ -265,6 +272,7 @@ def remove_game_function(game_menu, user_game_list, calculate_score_func, userna
 
     # Function to remove selected games
     def remove_selected_games():
+        """removes the selected game/games"""
         nonlocal user_game_list, game_menu, selected_games_vars
 
         # Identify selected games
@@ -329,6 +337,7 @@ def update_game_menu(game_menu, user_game_list):
 
 
 def remove_friend_function(friend_menu, user_friend_list):
+    """Handles the logic for removing a friend"""
     # Extract friend usernames from the list of friends
     user_names = [friend.user_name for friend in user_friend_list]
 
@@ -345,6 +354,7 @@ def remove_friend_function(friend_menu, user_friend_list):
     selected_friends_vars = []
 
     def remove_selected_friends():
+        """removes the selected friend/friends"""
         nonlocal user_friend_list, friend_menu, selected_friends_vars
 
         # Identify selected friends
@@ -393,7 +403,6 @@ def remove_friend_function(friend_menu, user_friend_list):
     cancel_button = ctk.CTkButton(remove_friend_window, text="Cancel", command=remove_friend_window.destroy)
     cancel_button.pack()
 
-
 def update_friend_menu(friend_menu, user_friend_list):
     """Update the content of the game menu after removal."""
     friend_menu.configure(state="normal")
@@ -402,3 +411,13 @@ def update_friend_menu(friend_menu, user_friend_list):
         friend_details = f"Username: {friend.user_name}\nReal Name: {friend.real_name if hasattr(friend, 'last_online') else 'N/A'}\nHours since Last Online: {friend.last_online if hasattr(friend, 'last_online') else 'N/A'}\n\n"
         friend_menu.insert(END, friend_details)
     friend_menu.configure(state="disabled")
+
+def center_dialog_boxes(input_dialog):
+    """Center the dialog boxes"""
+    screen_width = input_dialog.winfo_screenwidth()
+    screen_height = input_dialog.winfo_screenheight()
+    dialog_width = input_dialog.winfo_reqwidth()
+    dialog_height = input_dialog.winfo_reqheight()
+    x = (screen_width - dialog_width) // 2
+    y = (screen_height - dialog_height) // 2
+    input_dialog.geometry(f"+{x}+{y}")
