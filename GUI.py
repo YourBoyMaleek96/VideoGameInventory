@@ -159,15 +159,20 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
     """This function handles the logic for adding a game"""
     # Get Game Title
     title = get_game_details("Enter Game Title:", "Game Title")
-    if title is None or title.strip() == "":
+    if title is None:
+        return
+    elif title.strip() == "":
         tkinter.messagebox.showerror("Error", "Game title cannot be empty.")
         return
 
     # Get Hours Played
     hours_played = get_game_details("Enter Hours Played:", "Hours Played")
-    if hours_played is None or hours_played.strip() == "":
+    if hours_played is None:
+        return
+    elif hours_played.strip() == "":
         tkinter.messagebox.showerror("Error", "Hours played cannot be empty.")
         return
+
     try:
         hours_played = int(hours_played)
         if hours_played < 0:
@@ -178,9 +183,12 @@ def add_game_function(app, game_menu, user_game_list, calculate_score_func, user
 
     # Get Achievements
     achievements = get_game_details("Enter Achievements:", "Achievements")
-    if achievements is None or achievements.strip() == "":
+    if achievements is None:
+        return
+    elif achievements.strip() == "":
         tkinter.messagebox.showerror("Error", "Achievements cannot be empty.")
         return
+
     try:
         achievements = int(achievements)
         if achievements < 0:
@@ -223,12 +231,16 @@ def add_friend_function(friends_menu, user_friend_list):
         return
 
     real_name = get_friend_details("Enter Friend's Real Name:", "Friend's Real Name")
-    if real_name is None or real_name.strip() == "":
+    if real_name is None:
+        return
+    elif real_name.strip() == "":
         tkinter.messagebox.showerror("Error", "Real name cannot be empty.")
         return
 
     last_online = get_friend_details("Enter Last Online:", "Hours since Last Online:")
-    if last_online is None or last_online.strip() == "":
+    if last_online is None:
+        return
+    elif last_online.strip() == "":
         tkinter.messagebox.showerror("Error", "Hours last online cannot be empty.")
         return
     try:
